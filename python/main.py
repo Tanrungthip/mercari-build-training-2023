@@ -1,7 +1,6 @@
 import os
 import logging
 import pathlib
-import json
 import hashlib
 import sqlite3
 from fastapi import FastAPI, Form, HTTPException, File, UploadFile
@@ -91,6 +90,7 @@ def get_items():
     items = c.fetchall()
     conn.close()
     return items
+# this return [[1,"coffee","beverage","af1bb8dd235ef9e9bd9a509cec4c2b650d75080287f1bee6d12646c53d28ef83"],[2,"kiwi","fruit","af1bb8dd235ef9e9bd9a509cec4c2b650d75080287f1bee6d12646c53d28ef83"]
 
 @app.get("/items/{item_id}")
 def get_item_id(item_id: int):
@@ -102,6 +102,7 @@ def get_item_id(item_id: int):
     conn.commit()
     conn.close()
     return items[item_id - 1]
+# this return [2,"kiwi","fruit","af1bb8dd235ef9e9bd9a509cec4c2b650d75080287f1bee6d12646c53d28ef83"]%
 
 @app.get("/image/{image_filename}")
 async def get_image(image_filename):
@@ -114,17 +115,18 @@ async def get_image(image_filename):
         image = images / "default.jpg"
     return FileResponse(image)
 
-# search for items
 @app.get("/search")
-def search_item(keyword: str):
+def search_items(keyword: str):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     search_keyword = f"%{keyword}%"
     c.execute('''
-        SELECT items.id, items.name, category.name, items.image_name
+        SELECT items.id, items.name, items.category_id, items.image_name
         FROM items
         INNER JOIN category ON items.category_id = category.id
         WHERE items.name LIKE ?
     ''', (search_keyword,))
-    search_item = c.fetchall()
-    return search_item
+
+    search_results = c.fetchall()
+    return search_results
+# this return [[4,"tesla",4,"af1bb8dd235ef9e9bd9a509cec4c2b650d75080287f1bee6d12646c53d28ef83"]]%
