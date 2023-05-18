@@ -119,14 +119,7 @@ async def get_image(image_filename):
 def search_items(keyword: str):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
-    search_keyword = f"%{keyword}%"
-    c.execute('''
-        SELECT items.id, items.name, items.category_id, items.image_name
-        FROM items
-        INNER JOIN category ON items.category_id = category.id
-        WHERE items.name LIKE ?
-    ''', (search_keyword,))
-
+    c.execute(f"SELECT * from items WHERE name = '{keyword}'")
     search_results = c.fetchall()
     return search_results
 # this return [[4,"tesla",4,"af1bb8dd235ef9e9bd9a509cec4c2b650d75080287f1bee6d12646c53d28ef83"]]%
