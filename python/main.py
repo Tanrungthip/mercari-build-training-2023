@@ -20,7 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-db_path = "./db/mercari.sqlite3"
+# db_path = "./db/mercari.sqlite3"
+db_path = pathlib.Path(__file__).parent.resolve() / "db" / "mercari.sqlite3"
 
 def create_table(conn: sqlite3.Connection):
     table = [
