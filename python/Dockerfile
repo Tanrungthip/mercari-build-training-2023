@@ -10,8 +10,6 @@ RUN pip3 install uvicorn
 
 COPY main.py main.py
 
-COPY ./db/mercari.sqlite3 /db/mercari.sqlite3
-
 VOLUME /db
 
 USER trainee
